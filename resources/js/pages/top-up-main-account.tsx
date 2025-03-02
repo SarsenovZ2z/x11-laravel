@@ -1,0 +1,62 @@
+import AppLayout from "@/layouts/app-layout";
+import {useForm} from "@inertiajs/react";
+import {FormEventHandler} from "react";
+import TopUpAmount from "@/components/top-up-account/top-up-amount";
+import ChooseOrCreateBankCard from "@/components/top-up-account/choose-or-create-bank-card";
+
+type BankCard = {
+    bankCardNumber: string,
+    bankCardExpireMonth: string,
+    bankCardExpireYear: string,
+    bankCardExpireCvc: string,
+    shouldSaveCard: boolean,
+};
+
+type TopUpForm = {
+    amount: number | null,
+    bankCardId: number | null,
+    bankCard: BankCard | null,
+};
+
+export default function TopUpMainAccount() {
+    const {data, setData, post, processing, errors, reset} = useForm<TopUpForm>({
+        amount: null,
+        bankCardId: null,
+        bankCard: null,
+    });
+
+    const submit: FormEventHandler = (e) => {
+        e.preventDefault();
+
+        console.log(data);
+    };
+
+    return (
+        <AppLayout>
+            <form
+                onSubmit={submit}
+                className="flex flex-col gap-7.5 w-full sm:w-min px-4 sm:px-10 py-8.5 sm:my-10 mx-auto sm:border sm:rounded-xl"
+                style={{
+                    boxShadow: '0px 8px 16px 0px #55577029, 0px 2px 4px 0px #28293D0A',
+                }}
+            >
+                <h1 className="text-2xl font-medium">Пополнить банковской картой</h1>
+
+                <div className="flex flex-col gap-6">
+                    {/* Укажите сумму */}
+                    <TopUpAmount/>
+                    {/* Выбрать существующую или добавить новую карту */}
+                    <ChooseOrCreateBankCard/>
+                </div>
+
+                <button
+                    type="submit"
+                    className="w-full sm:w-min px-8 py-3.5 bg-accent rounded-full text-accent-foreground font-semibold"
+                    disabled={processing}
+                >
+                    Оплатить
+                </button>
+            </form>
+        </AppLayout>
+    );
+}
