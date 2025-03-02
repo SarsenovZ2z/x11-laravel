@@ -99,7 +99,7 @@ export default function ChooseOrCreateBankCard() {
 const CardFrontFormWrapper = ({children}: { children: ReactNode }) => {
     return (
         <div
-            className="relative flex-shrink-0 w-full sm:w-81 min-h-52 p-5 rounded-xl z-10 overflow-clip"
+            className="relative flex-shrink-0 w-full sm:w-81 h-52 p-5 rounded-xl overflow-clip z-10"
             style={{
                 background: 'linear-gradient(135deg, #A6C8FF 0%, #0043CE 100%)',
                 boxShadow: '0px 8px 16px 0px #55577029, 0px 2px 4px 0px #28293D0A',
