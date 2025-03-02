@@ -19,7 +19,7 @@ type TopUpForm = {
 };
 
 export default function TopUpMainAccount() {
-    const {data, setData, post, processing, errors, reset} = useForm<TopUpForm>({
+    const {data, processing} = useForm<TopUpForm>({
         amount: null,
         bankCardId: null,
         bankCard: null,

@@ -140,7 +140,7 @@ const CardBackFormWrapper = ({children}: { children: ReactNode }) => {
 
 const CreateNewCard = ({isActive}: { isActive: boolean }) => {
     return (
-        <CardWrapper isActive={true}>
+        <CardWrapper isActive={isActive}>
             <div
                 className="flex flex-col items-center justify-center w-full h-full gap-1 bg-secondary text-sm text-[#555770] font-semibold">
                 <PlusIcon/>
