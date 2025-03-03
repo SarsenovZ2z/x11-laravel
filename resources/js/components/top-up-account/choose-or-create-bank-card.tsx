@@ -6,6 +6,7 @@ import InfoIcon from "@/components/ui/icons/info-icon";
 export default function ChooseOrCreateBankCard() {
     const cards: Array<BankCardEntity> = [
         {
+            id: 1,
             number: "•••• 3282",
             expireMonth: "12",
             expireYear: "26",

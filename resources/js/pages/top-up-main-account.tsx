@@ -3,6 +3,7 @@ import {useForm} from "@inertiajs/react";
 import {FormEventHandler} from "react";
 import TopUpAmount from "@/components/top-up-account/top-up-amount";
 import ChooseOrCreateBankCard from "@/components/top-up-account/choose-or-create-bank-card";
+import {BankCardEntity} from "@/lib/bank-card/entities/bank-card-entity";
 
 type BankCard = {
     bankCardNumber: string,
@@ -18,7 +19,10 @@ type TopUpForm = {
     bankCard: BankCard | null,
 };
 
-export default function TopUpMainAccount() {
+export default function TopUpMainAccount({cards}: { cards: Array<BankCardEntity> }) {
+
+    console.log(cards);
+
     const {data, processing} = useForm<TopUpForm>({
         amount: null,
         bankCardId: null,
