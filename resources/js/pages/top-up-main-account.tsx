@@ -2,9 +2,10 @@ import AppLayout from "@/layouts/app-layout";
 import {useForm} from "@inertiajs/react";
 import {FormEventHandler} from "react";
 import TopUpAmount from "@/components/top-up-account/top-up-amount";
-import ChooseOrCreateBankCard, {BankCard} from "@/components/top-up-account/choose-or-create-bank-card";
 import {BankCardEntity} from "@/lib/bank-card/entities/bank-card-entity";
 import {Collection} from "@/lib/common/collection";
+import SelectBankCard from "@/components/top-up-account/select-bank-card";
+import CreateBankCard, {BankCard} from "@/components/top-up-account/create-bank-card";
 
 type TopUpForm = {
     amount: number | null,
@@ -42,18 +43,21 @@ export default function TopUpMainAccount({cards}: { cards: Collection<BankCardEn
                 <h1 className="text-2xl font-medium">Пополнить банковской картой</h1>
 
                 <div className="flex flex-col gap-6">
-                    {/* Укажите сумму */}
                     <TopUpAmount
                         onChange={(val) => setData('amount', val)}
                         errors={errors}
                     />
 
-                    {/* Выбрать существующую или добавить новую карту */}
-                    <ChooseOrCreateBankCard
+                    <SelectBankCard
                         cards={cards.data}
+                        value={cards.data.find((card => card.id == data.bankCardId)) || null}
+                        onChange={(value) => setData('bankCardId', value?.id || null)}
+                    />
+
+                    <CreateBankCard
+                        value={data.bankCard}
+                        onChange={(value) => setData('bankCard', value)}
                         errors={errors}
-                        setCardId={(val) => setData('bankCardId', val)}
-                        setBankCard={(val) => setData('bankCard', val)}
                     />
                 </div>
 

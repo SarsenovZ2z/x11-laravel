@@ -7,15 +7,21 @@ export default function TopUpAmount({onChange, errors}: {
     onChange: (val: number) => void,
     errors: any,
 }) {
-    const calculatedRef = useRef<HTMLInputElement>(null);
 
-    const changeEventHandler: ChangeEventHandler<HTMLInputElement> = (e) => {
-        const val = Number(e.target.value);
+    const convertedAmountRef = useRef<HTMLInputElement>(null);
 
-        if (calculatedRef.current) {
-            calculatedRef.current.value = (val * 15).toString();
+    const convertToCurrency = (amount: number) => {
+        if (!convertedAmountRef.current) {
+            return;
         }
 
+        convertedAmountRef.current.value = (amount * 15).toString();
+    };
+
+    const onAmountChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+        const val = Number(e.target.value);
+
+        convertToCurrency(val);
         onChange(val);
     };
 
@@ -32,7 +38,7 @@ export default function TopUpAmount({onChange, errors}: {
                         id="amount"
                         name="amount"
                         className="w-20 outline-none"
-                        onChange={changeEventHandler}
+                        onChange={onAmountChange}
                         placeholder="0000.00"
                         required
                     />
@@ -41,7 +47,7 @@ export default function TopUpAmount({onChange, errors}: {
                 <div className="flex items-center justify-between w-full px-4 py-3.5">
                     <input
                         type="text"
-                        ref={calculatedRef}
+                        ref={convertedAmountRef}
                         className="w-20 outline-none"
                         readOnly={true}
                         disabled={true}
