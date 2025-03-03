@@ -11,10 +11,11 @@ export type BankCard = {
     shouldSaveCard: boolean,
 };
 
-export default function ChooseOrCreateBankCard({cards, setCardId, setBankCard}: {
+export default function ChooseOrCreateBankCard({cards, setCardId, setBankCard, errors}: {
     cards: Array<BankCardEntity>,
     setCardId: (val: number | null) => void,
     setBankCard: (val: BankCard | null) => void
+    errors: any,
 }) {
     const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
     const [bankCardData, setBankCardData] = useState<BankCard>({
@@ -51,108 +52,107 @@ export default function ChooseOrCreateBankCard({cards, setCardId, setBankCard}: 
                     </button>
                 </div>
             </div>
-
-            {selectedCardId === null && (
-                <>
-                    <div className="flex flex-col sm:flex-row -space-y-4 sm:-space-x-4 sm:space-y-0">
-                        <CardFrontFormWrapper>
-                            <div className="flex flex-col justify-end gap-4 h-full text-xs text-accent-foreground">
-                                <div>
-                                    <label htmlFor="cardNumber" className="uppercase">
-                                        Номер карты
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="cardNumber"
-                                        name="cardNumber"
-                                        className="w-full px-4 py-2 mt-2 bg-background rounded-lg text-base text-muted-foreground placeholder:text-muted-foreground"
-                                        placeholder="Номер карты"
-                                        required
-                                        pattern="[0-9]{16}"
-                                        onChange={(e) => {
-                                            updateBankCardData('bankCardNumber', e.target.value);
-                                        }}
-                                    />
-                                </div>
-                                <div>
-                                    <label htmlFor="cardExpiresMonth" className="uppercase">
-                                        Действует до
-                                    </label>
-                                    <div className="flex items-center gap-1 mt-2">
-                                        <input
-                                            type="text"
-                                            id="cardExpiresMonth"
-                                            name="cardExpiresMonth"
-                                            className="w-18 px-4 py-2 bg-background rounded-lg text-base text-muted-foreground placeholder:text-muted-foreground"
-                                            placeholder="ММ"
-                                            required
-                                            pattern="[0-9]{2}"
-                                            onChange={(e) => {
-                                                updateBankCardData('bankCardExpireMonth', e.target.value);
-                                            }}
-                                        />
-                                        <span>/</span>
-                                        <input
-                                            type="text"
-                                            id="cardExpiresYear"
-                                            name="cardExpiresYear"
-                                            className="w-18 px-4 py-2 bg-background rounded-lg text-base text-muted-foreground placeholder:text-muted-foreground"
-                                            placeholder="ГГ"
-                                            required
-                                            pattern="[0-9]{2}"
-                                            onChange={(e) => {
-                                                updateBankCardData('bankCardExpireYear', e.target.value);
-                                            }}
-                                        />
-                                    </div>
-                                </div>
+            <div className="flex flex-col sm:flex-row -space-y-4 sm:-space-x-4 sm:space-y-0">
+                <CardFrontFormWrapper>
+                    <div className="flex flex-col justify-end gap-4 h-full text-xs text-accent-foreground">
+                        <div>
+                            <label htmlFor="cardNumber" className="uppercase">
+                                Номер карты
+                            </label>
+                            <input
+                                type="text"
+                                id="cardNumber"
+                                name="cardNumber"
+                                className={`w-full px-4 py-2 mt-2 bg-background rounded-lg ${errors['bankCard.bankCardNumber'] && 'border border-red-500'} text-base text-muted-foreground placeholder:text-muted-foreground`}
+                                placeholder="Номер карты"
+                                required
+                                pattern="[0-9]{16}"
+                                maxLength={16}
+                                onChange={(e) => {
+                                    updateBankCardData('bankCardNumber', e.target.value);
+                                }}
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="bankCardExpireMonth" className="uppercase">
+                                Действует до
+                            </label>
+                            <div className="flex items-center gap-1 mt-2">
+                                <input
+                                    type="text"
+                                    id="bankCardExpireMonth"
+                                    name="bankCardExpireMonth"
+                                    className={`w-18 px-4 py-2 bg-background rounded-lg ${errors['bankCard.bankCardExpireMonth'] && 'border border-red-500'} text-base text-muted-foreground placeholder:text-muted-foreground`}
+                                    placeholder="ММ"
+                                    required
+                                    pattern="[0-9]{2}"
+                                    maxLength={2}
+                                    onChange={(e) => {
+                                        updateBankCardData('bankCardExpireMonth', e.target.value);
+                                    }}
+                                />
+                                <span>/</span>
+                                <input
+                                    type="text"
+                                    id="bankCardExpireYear"
+                                    name="bankCardExpireYear"
+                                    className={`w-18 px-4 py-2 bg-background rounded-lg ${errors['bankCard.bankCardExpireYear'] && 'border border-red-500'} text-base text-muted-foreground placeholder:text-muted-foreground`}
+                                    placeholder="ГГ"
+                                    required
+                                    pattern="[0-9]{2}"
+                                    maxLength={2}
+                                    onChange={(e) => {
+                                        updateBankCardData('bankCardExpireYear', e.target.value);
+                                    }}
+                                />
                             </div>
-                        </CardFrontFormWrapper>
-                        <CardBackFormWrapper>
-                            <div className="flex flex-col justify-end gap-2 h-full max-w-46 sm:max-w-26 w-max text-xs">
-                                <label htmlFor="cvc" className="text-[#555770]">
-                                    CVV/CVC
-                                </label>
-                                <div className="flex sm:flex-col items-center sm:items-start gap-2">
-                                    <input
-                                        type="text"
-                                        id="cvc"
-                                        name="cvc"
-                                        className="w-18 px-4 py-2 bg-background rounded-lg text-base text-muted-foreground placeholder:text-muted-foreground"
-                                        placeholder="000"
-                                        required
-                                        pattern="[0-9]{3}"
-                                        onChange={(e) => {
-                                            updateBankCardData('bankCardCvc', e.target.value);
-                                        }}
-                                    />
-                                    <p className="text-[10px] text-[#8F90A6]">
-                                        три цифры с обратной стороны карты
-                                    </p>
-                                </div>
-                            </div>
-                        </CardBackFormWrapper>
+                        </div>
                     </div>
+                </CardFrontFormWrapper>
+                <CardBackFormWrapper>
+                    <div className="flex flex-col justify-end gap-2 h-full max-w-46 sm:max-w-26 w-max text-xs">
+                        <label htmlFor="cvc" className="text-[#555770]">
+                            CVV/CVC
+                        </label>
+                        <div className="flex sm:flex-col items-center sm:items-start gap-2">
+                            <input
+                                type="text"
+                                id="cvc"
+                                name="bankCardCvc"
+                                className={`w-18 px-4 py-2 bg-background rounded-lg ${errors['bankCard.bankCardCvc'] && 'border border-red-500'} text-base text-muted-foreground placeholder:text-muted-foreground`}
+                                placeholder="000"
+                                required
+                                pattern="[0-9]{3}"
+                                maxLength={3}
+                                onChange={(e) => {
+                                    updateBankCardData('bankCardCvc', e.target.value);
+                                }}
+                            />
+                            <p className="text-[10px] text-[#8F90A6]">
+                                три цифры с обратной стороны карты
+                            </p>
+                        </div>
+                    </div>
+                </CardBackFormWrapper>
+            </div>
 
-                    <label className="flex items-baseline gap-3">
-                        <input
-                            type="checkbox"
-                            name="saveCard"
-                            checked={bankCardData.shouldSaveCard}
-                            onChange={(e) => {
-                                updateBankCardData('shouldSaveCard', e.target.checked);
-                            }}
-                        />
-                        <p className="text-sm text-[#555770]">
-                            Запомнить эту карту. Это безопасно. <span
-                            className="inline-block align-bottom text-[#C7C9D9]"><InfoIcon/></span><br/>
-                            Сохраняя карту, вы соглашаетесь с <a href="#"
-                                                                 className="text-blue-500 whitespace-nowrap"> условиями
-                            привязки карты.</a>
-                        </p>
-                    </label>
-                </>
-            )}
+            <label className="flex items-baseline gap-3">
+                <input
+                    type="checkbox"
+                    name="saveCard"
+                    checked={bankCardData.shouldSaveCard}
+                    onChange={(e) => {
+                        updateBankCardData('shouldSaveCard', e.target.checked);
+                    }}
+                />
+                <p className="text-sm text-[#555770]">
+                    Запомнить эту карту. Это безопасно. <span
+                    className="inline-block align-bottom text-[#C7C9D9]"><InfoIcon/></span><br/>
+                    Сохраняя карту, вы соглашаетесь с <a href="#"
+                                                         className="text-blue-500 whitespace-nowrap"> условиями
+                    привязки карты.</a>
+                </p>
+            </label>
         </>
     );
 }

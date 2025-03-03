@@ -3,7 +3,10 @@ import RubleIcon from "@/components/ui/icons/ruble-icon";
 import CaretIcon from "@/components/ui/icons/caret-icon";
 import {ChangeEventHandler, useRef} from "react";
 
-export default function TopUpAmount({onChange}: { onChange: (val: number) => void }) {
+export default function TopUpAmount({onChange, errors}: {
+    onChange: (val: number) => void,
+    errors: any,
+}) {
     const calculatedRef = useRef<HTMLInputElement>(null);
 
     const changeEventHandler: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -22,7 +25,7 @@ export default function TopUpAmount({onChange}: { onChange: (val: number) => voi
                 Укажите сумму
             </label>
             <div
-                className="flex sm:inline-flex justify-between divide-x mt-2 bg-secondary border rounded-lg text-muted-foreground">
+                className={`flex sm:inline-flex justify-between divide-x mt-2 bg-secondary border ${errors['amount'] && 'border-red-500'} rounded-lg text-muted-foreground`}>
                 <div className="flex items-center justify-between w-full px-4 py-3.5">
                     <input
                         type="number"

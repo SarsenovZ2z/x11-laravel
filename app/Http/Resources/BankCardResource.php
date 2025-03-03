@@ -20,7 +20,7 @@ class BankCardResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'number' => $this->number,
+            'number' => '•••• ' . substr($this->number, -4),
             'expireMonth' => $this->expires_month,
             'expireYear' => $this->expires_year,
         ];
