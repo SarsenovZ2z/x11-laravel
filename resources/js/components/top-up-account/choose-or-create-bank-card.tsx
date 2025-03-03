@@ -1,98 +1,158 @@
-import {ReactNode} from "react";
+import {ReactNode, useState} from "react";
 import PlusIcon from "@/components/ui/icons/plus-icon";
 import {BankCardEntity} from "@/lib/bank-card/entities/bank-card-entity";
 import InfoIcon from "@/components/ui/icons/info-icon";
 
-export default function ChooseOrCreateBankCard() {
-    const cards: Array<BankCardEntity> = [
-        {
-            id: 1,
-            number: "•••• 3282",
-            expireMonth: "12",
-            expireYear: "26",
-        },
-    ];
+export type BankCard = {
+    bankCardNumber: string,
+    bankCardExpireMonth: string,
+    bankCardExpireYear: string,
+    bankCardCvc: string,
+    shouldSaveCard: boolean,
+};
+
+export default function ChooseOrCreateBankCard({cards, setCardId, setBankCard}: {
+    cards: Array<BankCardEntity>,
+    setCardId: (val: number | null) => void,
+    setBankCard: (val: BankCard | null) => void
+}) {
+    const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
+    const [bankCardData, setBankCardData] = useState<BankCard>({
+        bankCardNumber: '',
+        bankCardExpireMonth: '',
+        bankCardExpireYear: '',
+        bankCardCvc: '',
+        shouldSaveCard: true,
+    });
+
+    const updateBankCardData = (key: string, value: any) => {
+        const val = {...bankCardData, [key]: value};
+        setBankCardData(val);
+        setBankCard(val);
+    };
+
+    const selectCard = (card: BankCardEntity | null) => {
+        const val = card?.id || null;
+        setSelectedCardId(val);
+        setCardId(val);
+    };
 
     return (
         <>
             <div className="w-full overflow-x-auto">
                 <div className="flex items-center gap-4">
                     {cards.map((card, index) => (
-                        <Card key={index} card={card}/>
+                        <button type="button" key={index} onClick={() => selectCard(card)}>
+                            <Card card={card} isActive={card.id === selectedCardId}/>
+                        </button>
                     ))}
-                    <CreateNewCard isActive={true}/>
+                    <button type="button" onClick={() => selectCard(null)}>
+                        <CreateNewCard isActive={selectedCardId === null}/>
+                    </button>
                 </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row -space-y-4 sm:-space-x-4 sm:space-y-0">
-                <CardFrontFormWrapper>
-                    <div className="flex flex-col justify-end gap-4 h-full text-xs text-accent-foreground">
-                        <div>
-                            <label htmlFor="cardNumber" className="uppercase">
-                                Номер карты
-                            </label>
-                            <input
-                                type="text"
-                                id="cardNumber"
-                                name="cardNumber"
-                                className="w-full px-4 py-2 mt-2 bg-background rounded-lg text-base placeholder:text-muted-foreground"
-                                placeholder="Номер карты"
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="cardExpiresMonth" className="uppercase">
-                                Действует до
-                            </label>
-                            <div className="flex items-center gap-1 mt-2">
-                                <input
-                                    type="text"
-                                    id="cardExpiresMonth"
-                                    name="cardExpiresMonth"
-                                    className="w-18 px-4 py-2 bg-background rounded-lg text-base placeholder:text-muted-foreground"
-                                    placeholder="ММ"
-                                />
-                                <span>/</span>
-                                <input
-                                    type="text"
-                                    id="cardExpiresMonth"
-                                    name="cardExpiresMonth"
-                                    className="w-18 px-4 py-2 bg-background rounded-lg text-base placeholder:text-muted-foreground"
-                                    placeholder="ГГ"
-                                />
+            {selectedCardId === null && (
+                <>
+                    <div className="flex flex-col sm:flex-row -space-y-4 sm:-space-x-4 sm:space-y-0">
+                        <CardFrontFormWrapper>
+                            <div className="flex flex-col justify-end gap-4 h-full text-xs text-accent-foreground">
+                                <div>
+                                    <label htmlFor="cardNumber" className="uppercase">
+                                        Номер карты
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="cardNumber"
+                                        name="cardNumber"
+                                        className="w-full px-4 py-2 mt-2 bg-background rounded-lg text-base text-muted-foreground placeholder:text-muted-foreground"
+                                        placeholder="Номер карты"
+                                        required
+                                        pattern="[0-9]{16}"
+                                        onChange={(e) => {
+                                            updateBankCardData('bankCardNumber', e.target.value);
+                                        }}
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="cardExpiresMonth" className="uppercase">
+                                        Действует до
+                                    </label>
+                                    <div className="flex items-center gap-1 mt-2">
+                                        <input
+                                            type="text"
+                                            id="cardExpiresMonth"
+                                            name="cardExpiresMonth"
+                                            className="w-18 px-4 py-2 bg-background rounded-lg text-base text-muted-foreground placeholder:text-muted-foreground"
+                                            placeholder="ММ"
+                                            required
+                                            pattern="[0-9]{2}"
+                                            onChange={(e) => {
+                                                updateBankCardData('bankCardExpireMonth', e.target.value);
+                                            }}
+                                        />
+                                        <span>/</span>
+                                        <input
+                                            type="text"
+                                            id="cardExpiresYear"
+                                            name="cardExpiresYear"
+                                            className="w-18 px-4 py-2 bg-background rounded-lg text-base text-muted-foreground placeholder:text-muted-foreground"
+                                            placeholder="ГГ"
+                                            required
+                                            pattern="[0-9]{2}"
+                                            onChange={(e) => {
+                                                updateBankCardData('bankCardExpireYear', e.target.value);
+                                            }}
+                                        />
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        </CardFrontFormWrapper>
+                        <CardBackFormWrapper>
+                            <div className="flex flex-col justify-end gap-2 h-full max-w-46 sm:max-w-26 w-max text-xs">
+                                <label htmlFor="cvc" className="text-[#555770]">
+                                    CVV/CVC
+                                </label>
+                                <div className="flex sm:flex-col items-center sm:items-start gap-2">
+                                    <input
+                                        type="text"
+                                        id="cvc"
+                                        name="cvc"
+                                        className="w-18 px-4 py-2 bg-background rounded-lg text-base text-muted-foreground placeholder:text-muted-foreground"
+                                        placeholder="000"
+                                        required
+                                        pattern="[0-9]{3}"
+                                        onChange={(e) => {
+                                            updateBankCardData('bankCardCvc', e.target.value);
+                                        }}
+                                    />
+                                    <p className="text-[10px] text-[#8F90A6]">
+                                        три цифры с обратной стороны карты
+                                    </p>
+                                </div>
+                            </div>
+                        </CardBackFormWrapper>
                     </div>
-                </CardFrontFormWrapper>
-                <CardBackFormWrapper>
-                    <div className="flex flex-col justify-end gap-2 h-full max-w-46 sm:max-w-26 w-max text-xs">
-                        <label htmlFor="cvc" className="text-[#555770]">
-                            CVV/CVC
-                        </label>
-                        <div className="flex sm:flex-col items-center sm:items-start gap-2">
-                            <input
-                                type="text"
-                                id="cvc"
-                                name="cvc"
-                                className="w-18 px-4 py-2 bg-background rounded-lg text-base placeholder:text-muted-foreground"
-                                placeholder="000"
-                            />
-                            <p className="text-[10px] text-[#8F90A6]">
-                                три цифры с обратной стороны карты
-                            </p>
-                        </div>
-                    </div>
-                </CardBackFormWrapper>
-            </div>
 
-            <label className="flex items-baseline gap-3">
-                <input type="checkbox" name="saveCard"/>
-                <p className="text-sm text-[#555770]">
-                    Запомнить эту карту. Это безопасно. <span
-                    className="inline-block align-bottom text-[#C7C9D9]"><InfoIcon/></span><br/>
-                    Сохраняя карту, вы соглашаетесь с <a href="#" className="text-blue-500 whitespace-nowrap"> условиями
-                    привязки карты.</a>
-                </p>
-            </label>
+                    <label className="flex items-baseline gap-3">
+                        <input
+                            type="checkbox"
+                            name="saveCard"
+                            checked={bankCardData.shouldSaveCard}
+                            onChange={(e) => {
+                                updateBankCardData('shouldSaveCard', e.target.checked);
+                            }}
+                        />
+                        <p className="text-sm text-[#555770]">
+                            Запомнить эту карту. Это безопасно. <span
+                            className="inline-block align-bottom text-[#C7C9D9]"><InfoIcon/></span><br/>
+                            Сохраняя карту, вы соглашаетесь с <a href="#"
+                                                                 className="text-blue-500 whitespace-nowrap"> условиями
+                            привязки карты.</a>
+                        </p>
+                    </label>
+                </>
+            )}
         </>
     );
 }
@@ -151,9 +211,9 @@ const CreateNewCard = ({isActive}: { isActive: boolean }) => {
     );
 };
 
-const Card = ({card}: { card: BankCardEntity }) => {
+const Card = ({card, isActive}: { card: BankCardEntity, isActive: boolean }) => {
     return (
-        <CardWrapper>
+        <CardWrapper isActive={isActive}>
             <div className="p-2">
                 {card.number}<br/>
                 {card.expireMonth} / {card.expireYear}

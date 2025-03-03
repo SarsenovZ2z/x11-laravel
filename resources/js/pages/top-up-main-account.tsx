@@ -2,16 +2,9 @@ import AppLayout from "@/layouts/app-layout";
 import {useForm} from "@inertiajs/react";
 import {FormEventHandler} from "react";
 import TopUpAmount from "@/components/top-up-account/top-up-amount";
-import ChooseOrCreateBankCard from "@/components/top-up-account/choose-or-create-bank-card";
+import ChooseOrCreateBankCard, {BankCard} from "@/components/top-up-account/choose-or-create-bank-card";
 import {BankCardEntity} from "@/lib/bank-card/entities/bank-card-entity";
-
-type BankCard = {
-    bankCardNumber: string,
-    bankCardExpireMonth: string,
-    bankCardExpireYear: string,
-    bankCardExpireCvc: string,
-    shouldSaveCard: boolean,
-};
+import {Collection} from "@/lib/common/collection";
 
 type TopUpForm = {
     amount: number | null,
@@ -19,11 +12,9 @@ type TopUpForm = {
     bankCard: BankCard | null,
 };
 
-export default function TopUpMainAccount({cards}: { cards: Array<BankCardEntity> }) {
+export default function TopUpMainAccount({cards}: { cards: Collection<BankCardEntity> }) {
 
-    console.log(cards);
-
-    const {data, processing} = useForm<TopUpForm>({
+    const {data, setData, processing} = useForm<TopUpForm>({
         amount: null,
         bankCardId: null,
         bankCard: null,
@@ -48,9 +39,13 @@ export default function TopUpMainAccount({cards}: { cards: Array<BankCardEntity>
 
                 <div className="flex flex-col gap-6">
                     {/* Укажите сумму */}
-                    <TopUpAmount/>
+                    <TopUpAmount onChange={(val) => setData('amount', val)}/>
                     {/* Выбрать существующую или добавить новую карту */}
-                    <ChooseOrCreateBankCard/>
+                    <ChooseOrCreateBankCard
+                        cards={cards.data}
+                        setCardId={(val) => setData('bankCardId', val)}
+                        setBankCard={(val) => setData('bankCard', val)}
+                    />
                 </div>
 
                 <button
