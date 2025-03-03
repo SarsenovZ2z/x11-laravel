@@ -15,7 +15,13 @@ type TopUpForm = {
 
 export default function TopUpMainAccount({cards}: { cards: Collection<BankCardEntity> }) {
 
-    const {data, setData, post, reset, errors, processing} = useForm<TopUpForm>({
+    const {
+        data,
+        setData,
+        post,
+        errors,
+        processing,
+    } = useForm<TopUpForm>({
         amount: null,
         bankCardId: null,
         bankCard: null,
@@ -24,11 +30,7 @@ export default function TopUpMainAccount({cards}: { cards: Collection<BankCardEn
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        post(route('top-up-account'), {
-            onFinish: () => {
-                //
-            },
-        });
+        post(route('top-up-account'));
     };
 
     return (

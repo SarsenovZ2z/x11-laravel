@@ -55,7 +55,7 @@ class TopUpRequest extends FormRequest
                 $checkCardExpiration,
             ],
             'bankCard.bankCardCvc' => 'required_if:bankCardId,=,null|string|size:3',
-            'bankCard.shouldSaveCard' => 'required_if:bankCardId,=,null|boolean',
+            'bankCard.shouldSaveCard' => 'nullable|boolean',
         ];
     }
 

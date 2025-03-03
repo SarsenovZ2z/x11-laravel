@@ -15,8 +15,8 @@ export default function CreateBankCard({value, onChange, errors}: {
     errors: { [index: string]: string | undefined },
 }) {
 
-    const updateBankCardData = (key: string, value: any) => {
-        onChange({...value, [key]: value});
+    const updateBankCardData = (key: string, val: boolean | string | number | null) => {
+        onChange({...value, [key]: val} as BankCard);
     };
 
     return (

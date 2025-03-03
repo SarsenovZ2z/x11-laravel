@@ -5,7 +5,7 @@ import {ChangeEventHandler, useRef} from "react";
 
 export default function TopUpAmount({onChange, errors}: {
     onChange: (val: number) => void,
-    errors: any,
+    errors: { [index: string]: string | undefined },
 }) {
 
     const convertedAmountRef = useRef<HTMLInputElement>(null);
